@@ -77,49 +77,9 @@ def buildCurve(minn=2, maxx=50):
 	np.savetxt('steps.csv',results,delimiter=',')
 	return results
 
-def sampleProbabilityDistribution(data,samplePts=1000):
-	#Work in progress - incomplete
-	data = sorted(data)
-	length = len(data)
-	
-	lowBound = data[0]
-	highBound = data[-1]
-	interval = highBound - lowBound
-	stepSize = interval // samplePts 
-	# an integer - beware rounding issues
-
-	ptcount = np.zeros(samplePts)
-	pdist = np.matlib.zeros(samplePts,2)
-	totalPts = 0
-
-	for i in xrange(samplePts):
-		lb = stepSize*i + lowBound
-		# use mult to avoid rounding issues
-		hb = lb + stepSize
-		inStep = [d in data if (lb =< d =< hb)]
-		pdist[i,1] = inStep
-		totalPts += inStep
-
-	for i in xrange(samplePts):
-		pdist[i,0] = i / samplePts
-		pdist[i,1] = float(ptcount[i]) / totalPts
-
-	return pdist
-
-def makeCumulativeDistribution(data):
-	# untested
-	data = sorted(data)
-	length = len(data)
-	pd = np.zeros(length,2)
-	for i in xrange(length):
-		pd[i,0] = float(i) / length
-		# how far into the distribution are we
-		pd[i,1] = data[i]
-
-	return data
 
 def main():
-	print runDistribution(size=50)
+	print runDistribution(size=100)
 
 
 if __name__ == '__main__':
