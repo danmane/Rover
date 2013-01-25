@@ -1,27 +1,29 @@
 import System.Random
 import qualified Data.Set as Set
+import Data.List
 
 data Direction = U | D | L | R deriving (Show, Eq)
 
 data Grid = Grid { gridX :: Int, gridY :: Int, gSize :: Int } deriving (Show, Eq)
 -- x and y bounds of the grid, and number of spaces in the grid
-makeGrid :: Int -> Int -> Grid
-makeGrid x y = Grid x y (x*y)
-
-squareGrid :: Int -> Grid
-squareGrid x = Grid x x (x*x)
 
 data Coordinate = Coordinate {x :: Int, y :: Int} deriving (Show, Eq)
 
 data Rover = Rover { rgrid :: Grid
 				   -- the grid the rover is on
-				   , coord :: Coordinate
+				   , location :: Coordinate
 				   -- the current coordinate
 				   , visited :: Set.Set Int
 				   -- set of visited coordinates (by index of the coordinate)
 				   , nRemaining :: Int
 				   -- number of unvisited spots
 				   } deriving (Show, Eq)
+
+makeGrid :: Int -> Int -> Grid
+makeGrid x y = Grid x y (x*y)
+
+squareGrid :: Int -> Grid
+squareGrid x = Grid x x (x*x)
 
 makeRover :: Grid -> Rover
 -- Given the x and y bounds of the grid, make a new rover on that grid
@@ -33,11 +35,11 @@ makeRover grid = Rover grid startCoord visited nRemaining where
 moveRover :: Direction -> Rover -> Rover
 -- takes a direction and a rover, and constructs a new rover that's moved in 
 -- the given direction
-moveRover dir rover = Rover roverGrid newCoord newVisited newRemaining where
-	roverGrid = rgrid rover
-	newCoord = moveCoord (coord rover) roverGrid dir
-	newVisited = Set.insert (coord2Int newCoord roverGrid) (visited rover)
-	newRemaining = gSize roverGrid - Set.size newVisited
+moveRover dir rover = Rover grid newCoord newVisited newRemaining where
+	grid = rgrid rover
+	newCoord = moveCoord (location rover) grid dir
+	newVisited = Set.insert (coord2Int newCoord grid) (visited rover)
+	newRemaining = gSize grid - Set.size newVisited
 
 moveCoord :: Coordinate -> Grid -> Direction -> Coordinate
 moveCoord startCoord theGrid dir = Coordinate newBX newBY where
@@ -85,9 +87,21 @@ traversals grid gen = traverseStream grid (randomDirs gen) where
 		nSteps = length traversal
 		newDirs = drop nSteps dirs
 
+stdGenStream :: StdGen -> [StdGen]
+stdGenStream gen = map mkStdGen $ randoms gen
+
+parallelTraversals :: Grid -> StdGen -> [Int]
+-- not actually parallel. i was hoping that *map* would automatically parallelize it...
+parallelTraversals grid gen = map (traverse grid) (stdGenStream gen)
 
 coord2Int :: Coordinate -> Grid -> Int
 coord2Int coord grid = (x coord) + (y coord) * (gridX grid)
+
+data2csv :: [Int] -> String
+data2csv dat = concat $ intersperse "," $ map show dat
+
+main :: IO()
+main = putStrLn $ data2csv $ take 100 $ parallelTraversals (squareGrid 100) (mkStdGen 100)
 
 ------------------------------------
 -- Test Functions Below (yay TDD) --
