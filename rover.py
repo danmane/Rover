@@ -61,11 +61,7 @@ def runDistribution(size, nRepeats=1000):
 	fname = 'distribution_' + str(size) + '_'+ str(nRepeats) + '.csv'
 	np.savetxt(fname, results, delimiter=',')
 
-	bins = min(100,steps//10)
-	hist = np.histogram(results, bins)
-	np.savetxt('hist_'+fname, hist, delimiter=',')
-
-	return results, hist
+	return results
 
 def buildCurve(minn=2, maxx=50):
 	# build the data that shows # of steps vs grid size
@@ -79,7 +75,7 @@ def buildCurve(minn=2, maxx=50):
 
 
 def main():
-	print runDistribution(size=100)
+	print runDistribution(size=10)
 
 
 if __name__ == '__main__':
