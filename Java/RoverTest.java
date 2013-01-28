@@ -115,6 +115,7 @@ class RoverTest{
 		else {
 			System.out.println("Oh no, the tests failed!");
 		}
+		System.out.println(getRandomDirection());
 	}
 
 }
