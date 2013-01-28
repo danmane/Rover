@@ -1,6 +1,8 @@
 #!/usr/bin/env ipython
 # Rover v-1 for speed testing purposes
+# speed test standard: 20x20 grid, 10k runs
 # v1 (o(n) algo): 135s
+# v2 (o(1) algo): 119s
 from __future__ import division
 import random, numpy as np
 
@@ -14,6 +16,7 @@ class Rover:
 		self.x = 0
 		self.y = 0
 		self.visited = set((0,0))
+		self.nVisited = 1
 
 	def randomMove(self):
 		direction = random.choice(['U','D','L','R'])
@@ -31,17 +34,17 @@ class Rover:
 
 		self.x %= self.gridX
 		self.y %= self.gridY
-		self.visited.add( (self.x,self.y) )
-
-	def nVisited(self):
-		return len(self.visited)
+		
+		if (self.x, self.y) not in self.visited:
+			self.visited.add( (self.x,self.y) )
+			self.nVisited += 1
 
 def runRover(gridX, gridY):
 	steps = 0
 	myRover = Rover(gridX, gridY)
 	target = gridX * gridY
 
-	while myRover.nVisited() < target:
+	while myRover.nVisited < target:
 		myRover.randomMove()
 		steps += 1
 

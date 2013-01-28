@@ -2,7 +2,7 @@ import System.Random
 import qualified Data.Set as Set
 import Data.List
 
---V1 - took 64s on 10k/20x20 test set
+--V1 - took 64s on 10k/20x20 test set (o(g))
 
 data Direction = U | D | L | R deriving (Show, Eq)
 
