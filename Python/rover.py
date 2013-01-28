@@ -1,4 +1,6 @@
 #!/usr/bin/env ipython
+# Rover v-1 for speed testing purposes
+# v1 (o(n) algo): 135s
 from __future__ import division
 import random, numpy as np
 
@@ -58,8 +60,8 @@ def runDistribution(size, nRepeats=1000):
 	for i in xrange(nRepeats):
 		results[i] = runRover(size,size)
 
-	fname = 'distribution_' + str(size) + '_'+ str(nRepeats) + '.csv'
-	np.savetxt(fname, results, delimiter=',')
+	#fname = 'distribution_' + str(size) + '_'+ str(nRepeats) + '.csv'
+	#np.savetxt(fname, results, delimiter=',')
 
 	return results
 
@@ -73,10 +75,11 @@ def buildCurve(minn=2, maxx=50):
 	np.savetxt('steps.csv',results,delimiter=',')
 	return results
 
+def stdtest():
+	return runDistribution(size=20, nRepeats=10000)
 
 def main():
-	print runDistribution(size=10)
-
+	print stdtest()
 
 if __name__ == '__main__':
 	main()
