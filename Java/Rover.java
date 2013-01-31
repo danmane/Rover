@@ -20,6 +20,12 @@ class Rover {
 
 	}
 
+	public void randomMove(){
+		Direction d;
+		d = Direction.getRandomDirection();
+		moveRover(d);
+	}
+
 	public void moveRover (Direction d) {
 		switch(d){
 			case UP:
