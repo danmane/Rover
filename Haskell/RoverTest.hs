@@ -1,13 +1,14 @@
 import Rover
 import Coordinate
 import Direction
+import VisitedArray
 import Data.List
 
 modTests :: [(Bool, String)]
-modTests = [(testRoverModule, "Rover Module")
-		   ,(testCoordinateModule, "Coordinate Module")
-		   ,(testDirectionModule, "Direction Module")
-		   ]
+modTests = [(testRoverModule,        "Rover Module"      )
+		   ,(testCoordinateModule,   "Coordinate Module" )
+		   ,(testDirectionModule,    "Direction Module"  )
+		   ,(testVisitedArrayModule, "VisitedArrayModule")]
 
 allTests :: [(Bool, String)]
 allTests = modTests ++ [(and $ map fst modTests, "All")]
