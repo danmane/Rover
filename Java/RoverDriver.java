@@ -11,7 +11,6 @@ class RoverDriver {
 			newRover.randomMove();
 			steps++;
 		}
-
 		return steps;
 	}
 
@@ -26,9 +25,24 @@ class RoverDriver {
 	}
 	public static void main(String[] args) {
 		int[] results;
-		results = traversals(100,10000);
-		for (int res : results) {
-			//System.out.println(res);
+		int gridSize, nRepeats;
+		int sum=0;
+
+		if (args.length >= 2){
+			gridSize = Integer.parseInt(args[0]);
+			nRepeats = Integer.parseInt(args[1]);
 		}
+		else {
+			gridSize=20;
+			nRepeats=10000;
+		}
+
+		System.out.println("Using size=" + gridSize + ", repeats = " + nRepeats);
+
+		results = traversals(gridSize,nRepeats);
+		for (int res : results) {
+			sum += res;
+		}
+		System.out.println(sum);
 	}
 }
