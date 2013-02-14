@@ -36,10 +36,8 @@ moveCoord startCoord theGrid dir = Coordinate newBX newBY where
 		D -> (y startCoord) - 1
 		otherwise -> y startCoord
 
-	smartmod x y = (x + y) `mod` y
-	-- smartmod handles negative numbers better
-	newBX = newX `smartmod` (gridX theGrid)
-	newBY = newY `smartmod` (gridY theGrid)
+	newBX = newX `mod` (gridX theGrid)
+	newBY = newY `mod` (gridY theGrid)
 
 coord2Int :: Coordinate -> Grid -> Int
 coord2Int coord grid = (x coord) + (y coord) * (gridX grid)
