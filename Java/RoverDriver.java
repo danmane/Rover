@@ -25,6 +25,7 @@ class RoverDriver {
 	}
 	public static void main(String[] args) {
 		int[] results;
+<<<<<<< HEAD
 		int gridSize, nRepeats;
 		int sum=0;
 
@@ -44,5 +45,14 @@ class RoverDriver {
 			sum += res;
 		}
 		System.out.println(sum);
+=======
+		int summ;
+		summ = 0;
+		results = traversals(20,10000);
+		for (int res : results) {
+			summ += res;
+		}
+		System.out.println(summ);
+>>>>>>> Reverted to better set implementation
 	}
 }
