@@ -46,7 +46,7 @@ class Rover {
 		updateVisited();
 	}
 
-	public void updateVisited (){
+	private void updateVisited (){
 		int currentCoordinate;
 		currentCoordinate = coord2idx(x, y);
 		if (! hasVisited[currentCoordinate]){

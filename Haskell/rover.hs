@@ -8,6 +8,9 @@ module Rover
 , testRoverModule
 ) where
 
+-- Improvement: add foldUntil or foldWhile
+-- (b -> Bool) -> (a -> b -> b) -> [a] -> b -> b
+
 import System.Random
 import qualified Data.Set as Set
 import Data.List
@@ -45,11 +48,12 @@ nRemaining = snd . vArray
 traverse :: Grid -> StdGen -> Int
 -- Takes an x and y bounds for the grid and a generator
 -- Returns the number of steps it took the rover to traverse the grid
-traverse grid gen = finalSteps where
-	rover = makeRover grid
-	directions = randomDirs gen
-	roverStates = scanl (flip moveRover) rover directions 
-	finalSteps = length $ takeWhile (\x -> nRemaining x > 0) roverStates
+traverse grid gen = finalSteps 
+	where
+		rover = makeRover grid
+		directions = randomDirs gen
+		roverStates = scanl (flip moveRover) rover directions 
+		finalSteps = length $ takeWhile (\x -> nRemaining x > 0) roverStates
 
 
 traversals :: Grid -> StdGen -> [Int]
