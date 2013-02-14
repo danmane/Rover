@@ -16,34 +16,36 @@ import qualified Data.Set as Set
 import Data.List
 import Coordinate
 import Direction
-import VisitedArray
+
 --V1 - took 64s on 10k/20x20 test set (o(g))
 
 data Rover = Rover { rgrid :: Grid
 				   -- the grid the rover is on
 				   , location :: Coordinate
 				   -- the current coordinate
-				   , vArray :: VisitedArray
+				   , visited :: Set.Set Int
 				   -- set of visited coordinates (by index of the coordinate)
+				   , nRemaining :: Int
+				   -- number of unvisited spots
 				   } deriving (Show, Eq)
+
 
 
 makeRover :: Grid -> Rover
 -- Given the x and y bounds of the grid, make a new rover on that grid
-makeRover grid = Rover grid startCoord (visited, nRemaining) where
+makeRover grid = Rover grid startCoord visited nRemaining where
 	nRemaining = gSize grid - 1
-	visited = True : (take nRemaining $ repeat False)
+	visited = Set.singleton 0 
 
 moveRover :: Direction -> Rover -> Rover
 -- takes a direction and a rover, and constructs a new rover that's moved in 
 -- the given direction
-moveRover dir rover = Rover grid newCoord newVisited where
+moveRover dir rover = Rover grid newCoord newVisited newRemaining where
 	grid = rgrid rover
 	newCoord = moveCoord (location rover) grid dir
-	newVisited = updateVisited (vArray rover) newCoord grid
+	newVisited = Set.insert (coord2Int newCoord grid) (visited rover)
+	newRemaining = gSize grid - Set.size newVisited
 
-nRemaining :: Rover -> Int
-nRemaining = snd . vArray
 
 traverse :: Grid -> StdGen -> Int
 -- Takes an x and y bounds for the grid and a generator
@@ -81,21 +83,15 @@ parallelTraversals grid gen = map (traverse grid) (stdGenStream gen)
 ------------------------------------
 
 testRoverModule :: Bool
-testRoverModule = and [testMoveRover, testTraverse, testTraversals, testNumRemaining]
+testRoverModule = and [testMoveRover, testTraverse, testTraversals]
 
-testMoveRover = and [t1, t2, t3] where
-	t1 = location moved == startCoord  where
+testMoveRover = and [t1, t2] where
+	t1 = moved == Rover (makeGrid 2 2) startCoord fullset 0 where
+		fullset = Set.fromList [0..3]
 		moved = foldr moveRover (makeRover (squareGrid 2)) [U, R, D, L] 
-	t2 = location moved == Coordinate 2 1 where
-		moved = foldr moveRover (makeRover (squareGrid 3)) [R, R, L, R, U]
-	t3 = location moved == Coordinate 9 0 where
-		moved = moveRover L (makeRover (squareGrid 10))
-
-testNumRemaining = and [t1, t2] where
-	t1 = nRemaining moved == 0 where
-		moved = foldr moveRover (makeRover (squareGrid 2)) [U, R, D, L] 
-	t2 = nRemaining moved == 6 where
+	t2 = (nRemaining moved == 6) && (visited moved == Set.fromList [0,1,2]) where
 		moved = foldr moveRover (makeRover(squareGrid 3)) [R, R, R, L, L, R, R, L]
+
 
 testTraverse = and [t1, t2, t3] where
 	t1 = traverse (squareGrid 2) (mkStdGen 100) == 11

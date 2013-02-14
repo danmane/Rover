@@ -1,6 +1,6 @@
 module Coordinate
 ( Grid (gSize)
-, Coordinate (..)
+, Coordinate
 , makeGrid
 , squareGrid
 , startCoord
