@@ -7,4 +7,4 @@ data2csv :: [Int] -> String
 data2csv dat = concat $ intersperse "," $ map show dat
 
 main :: IO()
-main = putStrLn $ show $ sum $ take 10000 $ parallelTraversals (squareGrid 20) (mkStdGen 100)
+main = print . sum $ take 10000 $ parallelTraversals (squareGrid 20) (mkStdGen 100)
